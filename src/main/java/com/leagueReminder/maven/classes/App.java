@@ -10,7 +10,7 @@ public class App
     {
         //System.out.println( "Hello World!" );
         Orianna.loadConfiguration("config.json");
-        Orianna.setRiotAPIKey("RGAPI-28462425-e6e3-4b16-accb-4aa0def7b67e");
+        Orianna.setRiotAPIKey("API KEY HERE");
         
         Window window = new Window();
         //Summoner emelg = Summoner.named("emelg").get();
