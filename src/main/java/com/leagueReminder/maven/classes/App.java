@@ -18,15 +18,7 @@ public class App
         
     }
     
-    public static void setReminder(String summonerName, String reminderText, int numGames) {
+    public void setReminder() {
     	
-    }
-    
-    public void activateReminder() {
-    	
-    }
-    
-    public void gameStatusChecker() {
-    	//timer, timertask, timer.schedule
     }
 }
