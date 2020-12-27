@@ -4,17 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+
 public class Window {
 	private String summonerName;
 	private String reminderText;
 	private int numGames;
+	private JFrame frame;	
 	private JTextField stext;
 	private JTextField rtext;
 	private JTextField ntext;	
 	
 	public Window() {
 		//Creating the frame
-		JFrame frame = new JFrame("League Reminder App");
+		frame = new JFrame("League Reminder App");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(450,200);
 		frame.setResizable(false);
@@ -66,10 +68,16 @@ public class Window {
 		    		System.out.println(numGames);
 		    		System.out.println(summonerName);
 		    		System.out.println(reminderText);		// execute setreminder
+		    		App.setReminder(summonerName, reminderText, numGames);
 	    		} catch (NumberFormatException x) {
-	    			System.out.println("needs to be a number"); // popup window notifying user of invalid input
+	    			//System.out.println("needs to be a number"); 
+	    			// popup window notifying user of invalid input
+	    			JOptionPane.showMessageDialog(frame,
+	    				    "needs to be a number",
+	    				    "Invalid input",
+	    				    JOptionPane.WARNING_MESSAGE);
 	    		}
-	    		//System.out.println(summonerName);
+	    		//System.out.println(summonerName, numGames, reminderText);
 	    	}
 	    });
 	    
