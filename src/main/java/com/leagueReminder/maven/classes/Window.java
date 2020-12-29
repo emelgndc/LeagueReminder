@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 
-public class Window {
+public class Window {//change this into a subclass of Window? so the other window (editing/removing reminders) can inherit 
 	private String summonerName;
 	private String reminderText;
 	private int numGames;
