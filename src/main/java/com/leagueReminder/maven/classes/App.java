@@ -2,6 +2,7 @@ package com.leagueReminder.maven.classes;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -13,7 +14,6 @@ import com.merakianalytics.orianna.types.core.summoner.Summoner;
 public class App 
 {
 	static ArrayList<Player> players = new ArrayList<Player>();
-	private static ArrayList<Reminder> reminders = new ArrayList<Reminder>();
 	
     @SuppressWarnings("unchecked")
 	public static void main( String[] args )
@@ -26,25 +26,19 @@ public class App
         //Deserialize players and reminders list
         try {
         	FileInputStream playersIn = new FileInputStream("data/players.ser");
-        	FileInputStream remindersIn = new FileInputStream("data/reminders.ser");
-        	ObjectInputStream in1 = new ObjectInputStream(playersIn);
-        	ObjectInputStream in2 = new ObjectInputStream(remindersIn);
-        	
-        	players = (ArrayList<Player>)in1.readObject();
-        	reminders = (ArrayList<Reminder>)in2.readObject();
-        	
-        	in1.close();
-        	in2.close();
+        	ObjectInputStream objin = new ObjectInputStream(playersIn);
+        	players = (ArrayList<Player>)objin.readObject();
+        	objin.close();
         	playersIn.close();
-        	remindersIn.close();
+
         } catch (EOFException e)  {			//file is empty - nothing stored, this is fine!
         	return;
         } catch (FileNotFoundException f) {	//files do not exist. probably due to first launch. also fine!
         	try {
         		FileOutputStream playersOut = new FileOutputStream("data/players.ser");
-                FileOutputStream remindersOut = new FileOutputStream("data/reminders.ser");
+                //FileOutputStream remindersOut = new FileOutputStream("data/reminders.ser");
                 playersOut.close();
-                remindersOut.close();
+                //remindersOut.close();
         	} catch (IOException j) {
         		j.printStackTrace();
         		return;
@@ -61,48 +55,53 @@ public class App
         
         for (Player player: players) {
         	System.out.println(player);
+        	for (Reminder r: player.getReminders()) {
+        		System.out.println(r);
+        	}
         }
         
-        for (Reminder reminder: reminders) {
-        	System.out.println(reminder);
-        }
+    	Timer t = new Timer();
+    	t.schedule(new CheckerTask(), 0, 10000);
+    }
+    
+    public static void serializeData() {
+        try {
+            FileOutputStream playersOut = new FileOutputStream("data/players.ser");
+            ObjectOutputStream objout = new ObjectOutputStream(playersOut);
+            objout.writeObject(players);
+            objout.close();
+            playersOut.close();
+         } catch (IOException i) {
+            i.printStackTrace();
+         }
     }
     
     public static void setReminder(String summonerName, String reminderText, int numGames) {
     	boolean uniqueP = true;
     	Player existing = null;
+    	//System.out.println(players);
     	for (Player p: players) {				//check if player is in players list already
-    		if (p.getName() == summonerName) {
+    		if (p.getName().equals(summonerName)) {
     			uniqueP = false;
     			existing = p;
     			break;
     		}
     	}
     	
-    	if (uniqueP) {
+    	Reminder r = new Reminder(summonerName, reminderText, numGames);
+    	
+    	if (uniqueP) {	//if player is unique (i.e. not already in list), create a new Player
     		Player player = new Player(summonerName, numGames);
     		players.add(player);
-    	} else {
-    		existing.setGamesLeft(Math.max(numGames, existing.getGamesLeft()));	//if player already exists, set gamesLeft to highest value
+    		player.addReminder(r);
+    		//System.out.println("WAS UNIQUE");
+    	} else {		//otherwise, set gamesLeft to highest value
+    		existing.setGamesLeft(Math.max(numGames, existing.getGamesLeft()));
+    		existing.addReminder(r);
+    		//System.out.println("WAS NOT UNIQUE");
     	}
     	
-    	Reminder reminder = new Reminder(summonerName, reminderText, numGames);
-    	reminders.add(reminder);
-    	
-        try {
-            FileOutputStream playersOut = new FileOutputStream("data/players.ser");
-            FileOutputStream remindersOut = new FileOutputStream("data/reminders.ser");
-            ObjectOutputStream out1 = new ObjectOutputStream(playersOut);
-            ObjectOutputStream out2 = new ObjectOutputStream(remindersOut);
-            out1.writeObject(players);
-            out2.writeObject(reminders);
-            out1.close();
-            out2.close();
-            playersOut.close();
-            remindersOut.close();
-         } catch (IOException i) {
-            i.printStackTrace();
-         }
+        serializeData();
     }
     
     public static void activateReminder(Reminder r) {
@@ -112,7 +111,8 @@ public class App
     	d.setVisible(true);
     }
     
-    public void gameStatusChecker() {
-    	//Timer t = new Timer
-    }
+//    public void gameStatusChecker() {
+//    	Timer t = new Timer();
+//    	t.schedule(new CheckerTask(), 0, 10000);
+//    }
 }

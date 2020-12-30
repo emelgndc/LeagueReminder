@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Player implements Serializable {
 	private String summonerName;
 	private int gamesLeft;
-	private ArrayList<Reminder> reminders;
+	private ArrayList<Reminder> reminders = new ArrayList<Reminder>();
 	private boolean ingame;
 	//**This might also remove the need for a reminders.ser file, as players.ser will store all reminders under each player.
 	//	**Will need to think about the effects of this wrt an options menu for deleting reminders.
@@ -42,6 +42,10 @@ public class Player implements Serializable {
 		return this.gamesLeft;
 	}
 	
+	public void decrement() {
+		gamesLeft--;
+	}
+	
 	public void setIngame(boolean s) {
 		this.ingame = s;
 	}
@@ -51,6 +55,6 @@ public class Player implements Serializable {
 	}
 	
 	public String toString() {
-		return "Player [" + summonerName + "]";
+		return "Player [" + summonerName + ", reminders: " + reminders + "]";
 	}
 }
