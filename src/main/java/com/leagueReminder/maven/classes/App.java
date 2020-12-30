@@ -3,12 +3,16 @@ package com.leagueReminder.maven.classes;
 import java.io.*;
 import java.util.ArrayList;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
 
 public class App 
 {
-	private static ArrayList<Player> players = new ArrayList<Player>();
+	static ArrayList<Player> players = new ArrayList<Player>();
 	private static ArrayList<Reminder> reminders = new ArrayList<Reminder>();
 	
     @SuppressWarnings("unchecked")
@@ -18,7 +22,7 @@ public class App
         Orianna.setRiotAPIKey("API KEY HERE");
         
         Window window = new Window();
-        
+
         //Deserialize players and reminders list
         try {
         	FileInputStream playersIn = new FileInputStream("data/players.ser");
@@ -62,8 +66,6 @@ public class App
         for (Reminder reminder: reminders) {
         	System.out.println(reminder);
         }
-        //Summoner emelg = Summoner.named("emelg").get();
-        //System.out.println(emelg.getLevel());
     }
     
     public static void setReminder(String summonerName, String reminderText, int numGames) {
@@ -103,10 +105,14 @@ public class App
          }
     }
     
-    public void activateReminder() {
+    public static void activateReminder(Reminder r) {
+    	JOptionPane o = new JOptionPane(r.getText());
+    	JDialog d = o.createDialog(null, "LeagueReminder");
+    	d.setAlwaysOnTop(true);
+    	d.setVisible(true);
     }
     
     public void gameStatusChecker() {
-    	//timer, timertask, timer.schedule
+    	//Timer t = new Timer
     }
 }

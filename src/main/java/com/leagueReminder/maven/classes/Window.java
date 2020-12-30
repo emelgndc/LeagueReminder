@@ -81,6 +81,7 @@ public class Window {//change this into a subclass of Window? so the other windo
 	    	}
 	    });
 	    
+	    
 	    //Adding components to center panel
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 	    panel.add(summonerNamePanel);
@@ -92,6 +93,7 @@ public class Window {//change this into a subclass of Window? so the other windo
 	    frame.getContentPane().add(BorderLayout.CENTER, panel);
 	    frame.getContentPane().add(BorderLayout.PAGE_END, button);
 	    frame.setVisible(true);
+
 	}
 
 	

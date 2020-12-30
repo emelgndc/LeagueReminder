@@ -13,6 +13,14 @@ public class Reminder implements Serializable {
 		this.numGames = numGames;
 	}
 	
+	public String getText() {
+		return this.reminderText;
+	}
+	
+	public int getNumGames() {
+		return numGames;
+	}
+	
 	public void decrement() {
 		numGames--;
 	}
