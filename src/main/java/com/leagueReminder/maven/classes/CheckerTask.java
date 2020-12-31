@@ -6,13 +6,14 @@ import com.merakianalytics.orianna.types.common.Region;
 import com.merakianalytics.orianna.types.core.summoner.Summoner;
 
 public class CheckerTask extends TimerTask {
-	private Summoner s;
+	//private Summoner s;
 	
 	@Override
 	public void run() {
+		System.out.println("run once");
 		for (Player p: App.players) {	//loop through all players with active reminders
 			System.out.print(p.getName());
-			s = Summoner.named(p.getName()).withRegion(Region.OCEANIA).get();	//fetch summoner
+			Summoner s = Summoner.named(p.getName()).withRegion(Region.OCEANIA).get();	//fetch summoner
 			System.out.println(s.isInGame());
 			if (p.getIngame() == true) {	// if player was but is no longer ingame, activate reminders	
 				if (s.isInGame() == false) {

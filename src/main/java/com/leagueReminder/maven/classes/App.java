@@ -14,6 +14,8 @@ import com.merakianalytics.orianna.types.core.summoner.Summoner;
 public class App 
 {
 	static ArrayList<Player> players = new ArrayList<Player>();
+	static Timer timer = new Timer();
+	private static boolean timerActive = false;
 	
     @SuppressWarnings("unchecked")
 	public static void main( String[] args )
@@ -32,13 +34,11 @@ public class App
         	playersIn.close();
 
         } catch (EOFException e)  {			//file is empty - nothing stored, this is fine!
-        	return;
+        	System.out.println("file is empty");
         } catch (FileNotFoundException f) {	//files do not exist. probably due to first launch. also fine!
         	try {
         		FileOutputStream playersOut = new FileOutputStream("data/players.ser");
-                //FileOutputStream remindersOut = new FileOutputStream("data/reminders.ser");
                 playersOut.close();
-                //remindersOut.close();
         	} catch (IOException j) {
         		j.printStackTrace();
         		return;
@@ -53,15 +53,14 @@ public class App
         	return;
         }
         
+        //Testing that players/reminders have been serialized properly (comment out later)
         for (Player player: players) {
         	System.out.println(player);
         	for (Reminder r: player.getReminders()) {
         		System.out.println(r);
         	}
         }
-        
-    	Timer t = new Timer();
-    	t.schedule(new CheckerTask(), 0, 10000);
+    	startChecker();	//this will only run if file exists and was not empty
     }
     
     public static void serializeData() {
@@ -101,7 +100,10 @@ public class App
     		//System.out.println("WAS NOT UNIQUE");
     	}
     	
-        serializeData();
+        serializeData(); 
+        if (timerActive == false) {
+        	startChecker();
+        }
     }
     
     public static void activateReminder(Reminder r) {
@@ -111,8 +113,12 @@ public class App
     	d.setVisible(true);
     }
     
-//    public void gameStatusChecker() {
-//    	Timer t = new Timer();
-//    	t.schedule(new CheckerTask(), 0, 10000);
+    public static void startChecker() {
+    	timer.schedule(new CheckerTask(), 0, 10000);
+    	timerActive = true;
+    }
+    
+//    public static void stopChecker() {
+//    	timer.cancel();
 //    }
 }
