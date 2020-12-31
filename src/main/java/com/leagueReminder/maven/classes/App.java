@@ -21,7 +21,7 @@ public class App
 	public static void main( String[] args )
     {
         Orianna.loadConfiguration("config.json");
-        Orianna.setRiotAPIKey("API KEY HERE");
+        Orianna.setRiotAPIKey("RGAPI-c12552ef-9307-4026-919c-96c91c71b5da");
         
         Window window = new Window();
 
@@ -114,7 +114,7 @@ public class App
     }
     
     public static void startChecker() {
-    	timer.schedule(new CheckerTask(), 0, 10000);
+    	timer.schedule(new CheckerTask(), 0, 5000);
     	timerActive = true;
     }
     

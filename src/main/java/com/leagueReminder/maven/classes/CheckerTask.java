@@ -13,6 +13,8 @@ public class CheckerTask extends TimerTask {
 		System.out.println("run once");
 		for (Player p: App.players) {	//loop through all players with active reminders
 			System.out.print(p.getName());
+			Orianna.loadConfiguration("config.json");
+	        Orianna.setRiotAPIKey("RGAPI-c12552ef-9307-4026-919c-96c91c71b5da");
 			Summoner s = Summoner.named(p.getName()).withRegion(Region.OCEANIA).get();	//fetch summoner
 			System.out.println(s.isInGame());
 			if (p.getIngame() == true) {	// if player was but is no longer ingame, activate reminders	
@@ -42,6 +44,7 @@ public class CheckerTask extends TimerTask {
 					System.out.println("ingame - set true");
 				}
 			}
+			s = null;
 		}
 	}
 }
