@@ -5,11 +5,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
-import com.merakianalytics.orianna.Orianna;
-import com.merakianalytics.orianna.types.core.summoner.Summoner;
 
 public class App 
 {
@@ -20,9 +16,6 @@ public class App
     @SuppressWarnings("unchecked")
 	public static void main( String[] args )
     {
-        Orianna.loadConfiguration("config.json");
-        Orianna.setRiotAPIKey("RGAPI-c12552ef-9307-4026-919c-96c91c71b5da");
-        
         Window window = new Window();
 
         //Deserialize players and reminders list
@@ -54,12 +47,7 @@ public class App
         }
         
         //Testing that players/reminders have been serialized properly (comment out later)
-        for (Player player: players) {
-        	System.out.println(player);
-        	for (Reminder r: player.getReminders()) {
-        		System.out.println(r);
-        	}
-        }
+        System.out.println(App.players);
     	startChecker();	//this will only run if file exists and was not empty
     }
     
@@ -78,8 +66,9 @@ public class App
     public static void setReminder(String summonerName, String reminderText, int numGames) {
     	boolean uniqueP = true;
     	Player existing = null;
-    	//System.out.println(players);
-    	for (Player p: players) {				//check if player is in players list already
+    	Reminder r = new Reminder(summonerName, reminderText, numGames);
+    	
+    	for (Player p: players) {	//check if player is in players list already
     		if (p.getName().equals(summonerName)) {
     			uniqueP = false;
     			existing = p;
@@ -87,20 +76,18 @@ public class App
     		}
     	}
     	
-    	Reminder r = new Reminder(summonerName, reminderText, numGames);
-    	
     	if (uniqueP) {	//if player is unique (i.e. not already in list), create a new Player
     		Player player = new Player(summonerName, numGames);
     		players.add(player);
     		player.addReminder(r);
-    		//System.out.println("WAS UNIQUE");
-    	} else {		//otherwise, set gamesLeft to highest value
-    		existing.setGamesLeft(Math.max(numGames, existing.getGamesLeft()));
+    		System.out.println("WAS UNIQUE");
+    	} else {
     		existing.addReminder(r);
-    		//System.out.println("WAS NOT UNIQUE");
+    		System.out.println("WAS NOT UNIQUE");
     	}
     	
         serializeData(); 
+        
         if (timerActive == false) {
         	startChecker();
         }
@@ -114,7 +101,7 @@ public class App
     }
     
     public static void startChecker() {
-    	timer.schedule(new CheckerTask(), 0, 5000);
+    	timer.schedule(new CheckerTask(), 0, 10000);
     	timerActive = true;
     }
     

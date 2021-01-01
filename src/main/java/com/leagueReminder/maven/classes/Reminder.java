@@ -3,6 +3,10 @@ package com.leagueReminder.maven.classes;
 import java.io.Serializable;
 
 public class Reminder implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1400397103907294682L;
 	private String summonerName;
 	private String reminderText;
 	private int numGames;

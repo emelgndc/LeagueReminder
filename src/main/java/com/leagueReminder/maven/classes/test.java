@@ -9,7 +9,7 @@ public class test {
 	public static void main( String[] args )
     {
 	    Orianna.loadConfiguration("config.json");
-	    Orianna.setRiotAPIKey("RGAPI-c12552ef-9307-4026-919c-96c91c71b5da");
+	    Orianna.setRiotAPIKey("RGAPI-d45315e6-fac4-4834-9b2d-4ed353651a47");
 	    
 	    Summoner s = Summoner.named("emelg").withRegion(Region.OCEANIA).get();
 	    System.out.println(s.isInGame());
