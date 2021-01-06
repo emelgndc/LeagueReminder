@@ -2,6 +2,8 @@ package com.leagueReminder.maven.classes;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 
@@ -13,6 +15,7 @@ public class Window {//change this into a subclass of Window? so the other windo
 	private JTextField stext;
 	private JTextField rtext;
 	private JTextField ntext;	
+	//private JFrame remindersWindow;
 	
 	public Window() {
 		//Creating the frame
@@ -20,19 +23,42 @@ public class Window {//change this into a subclass of Window? so the other windo
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(450,200);
 		frame.setResizable(false);
-		
 
 	    //Menu bar
 	    JMenuBar mb = new JMenuBar();
 	    JMenu file = new JMenu("File");
-	    JMenuItem rem = new JMenuItem("Active Reminders");
+	    JMenuItem rem = new JMenuItem("View/Remove Reminders");
 	    JMenuItem exit = new JMenuItem("Exit");
 	    file.add(rem);
 	    file.add(exit);
 	    mb.add(file);
 	    
+//	    rem.addActionListener(new ActionListener() {
+//	    	@Override
+//	    	public void actionPerformed(ActionEvent e) {
+//	    	    DefaultListModel<Reminder> lm = new DefaultListModel<Reminder>();
+//	    	    
+//	    	    for (Player p: App.players) {
+//	    	    	for (Reminder r: p.getReminders()) {
+//	    	    		lm.addElement(r);
+//	    	    	}
+//	    	    }
+//	    	    
+//	    	    JList<Reminder> list = new JList<Reminder>(lm);
+//	    	    RemindersWindow r = new RemindersWindow("View/Remove Reminders", list);
+//	    	    r.show();
+//	    	}
+//	    });
+	    
+	    exit.addActionListener(new ActionListener() {
+	    	@Override
+	    	public void actionPerformed(ActionEvent e) {
+	    		System.exit(0);
+	    	}
+	    });
+	    
 		//TextFields
-		stext = new JTextField(15);
+	    stext = new JTextField(15);
 		rtext = new JTextField(25);
 		ntext = new JTextField(2);
 		
@@ -70,14 +96,12 @@ public class Window {//change this into a subclass of Window? so the other windo
 		    		System.out.println(reminderText);		// execute setreminder
 		    		App.setReminder(summonerName, reminderText, numGames);
 	    		} catch (NumberFormatException x) {
-	    			//System.out.println("needs to be a number"); 
 	    			// popup window notifying user of invalid input
 	    			JOptionPane.showMessageDialog(frame,
 	    				    "needs to be a number",
 	    				    "Invalid input",
 	    				    JOptionPane.WARNING_MESSAGE);
 	    		}
-	    		//System.out.println(summonerName, numGames, reminderText);
 	    	}
 	    });
 	    
@@ -93,7 +117,6 @@ public class Window {//change this into a subclass of Window? so the other windo
 	    frame.getContentPane().add(BorderLayout.CENTER, panel);
 	    frame.getContentPane().add(BorderLayout.PAGE_END, button);
 	    frame.setVisible(true);
-
 	}
 
 	
