@@ -51,8 +51,7 @@ public class App
         	return;
         }
         
-        //Testing that players/reminders have been serialized properly (comment out later)
-        System.out.println(App.players);
+        System.out.println(App.players); //Testing that players/reminders have been serialized properly (comment out later)
     	startChecker();	//this will only run if file exists and was not empty
     }
     
@@ -101,11 +100,20 @@ public class App
         }
     }
     
-    public static void activateReminder(Reminder r) {
+    public static boolean activateReminder(Reminder r) {
     	JOptionPane o = new JOptionPane(r.getText());
     	JDialog d = o.createDialog(null, "LeagueReminder");
     	d.setAlwaysOnTop(true);
     	d.setVisible(true);
+    	
+		if (r.getNumGames() != 0) {
+			r.decrement();
+			
+			if (r.getNumGames() == 0) {		//remove reminder if there are no games left
+				return true;
+			}
+		}
+		return false;
     }
     
     public static void deleteReminder(Reminder r) {

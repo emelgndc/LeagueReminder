@@ -43,8 +43,7 @@ public class CheckerTask extends TimerTask {
     			System.out.println("summoner " + p.getName() + " does not exist");
     			
     			s = null;
-    			boolean empty = App.cleanReminders(p, removeR);
-    			if (empty) removeP.add(p);
+    			if (App.cleanReminders(p, removeR)) removeP.add(p);
     			
     			continue;
     		}
@@ -54,20 +53,10 @@ public class CheckerTask extends TimerTask {
 				System.out.println(cmct + " INGAME");
 				if (cm.exists() == false) {	// (no longer ingame)
 					System.out.println("finished game - set false and activate reminder");	
-					System.out.println(cmct + " FINISHED");
 					p.setIngame(false);
 					for (Iterator<Reminder> it = p.getReminders().iterator(); it.hasNext();) {
 						r = it.next();
-						App.activateReminder(r);
-						if (r.getNumGames() == 0) {			//skip this iteration if reminder is unlimited (0)
-							//System.out.println(r + "is unlimited");
-							continue;
-						} else {
-							r.decrement();
-							if (r.getNumGames() == 0) {		//remove reminder if there are no games left
-								removeR.add(r);				//add to removal list (avoids concurrentmodificationexception)
-							}
-						}
+						if (App.activateReminder(r)) removeR.add(r);	//add if reminder is out of games
 					}
 				}
 				
@@ -86,9 +75,7 @@ public class CheckerTask extends TimerTask {
 			
 			s = null;
 			
-			boolean empty = App.cleanReminders(p, removeR);
-			if (empty) removeP.add(p);
-			
+			if (App.cleanReminders(p, removeR)) removeP.add(p);
 		}
 		
 		App.cleanPlayers(removeP);
