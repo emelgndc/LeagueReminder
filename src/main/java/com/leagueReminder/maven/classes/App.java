@@ -4,25 +4,29 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Timer;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 public class App 
 {
 	static ArrayList<Player> players = new ArrayList<Player>();
+	static DefaultListModel<Reminder> reminders = new DefaultListModel<Reminder>();
 	static Timer timer = new Timer();
 	private static boolean timerActive = false;
+	private static Window window;
 	
     @SuppressWarnings("unchecked")
 	public static void main( String[] args )
     {
-        Window window = new Window();
+        window = new Window();
 
         //Deserialize players and reminders list
         try {
         	FileInputStream playersIn = new FileInputStream("data/players.ser");
         	ObjectInputStream objin = new ObjectInputStream(playersIn);
         	players = (ArrayList<Player>)objin.readObject();
+        	reminderSetup();
         	objin.close();
         	playersIn.close();
 
@@ -68,7 +72,8 @@ public class App
     	Player existing = null;
     	Reminder r = new Reminder(summonerName, reminderText, numGames);
     	
-    	for (Player p: players) {	//check if player is in players list already
+    	for (int i=0; i<players.size(); i++) {	//check if player is in players list already
+    		Player p = players.get(i);
     		if (p.getName().equals(summonerName)) {
     			uniqueP = false;
     			existing = p;
@@ -86,6 +91,8 @@ public class App
     		System.out.println("WAS NOT UNIQUE");
     	}
     	
+    	reminders.addElement(r);
+//    	window.refresh(reminders);
         serializeData(); 
         
         if (timerActive == false) {
@@ -100,6 +107,27 @@ public class App
     	d.setVisible(true);
     }
     
+    public static boolean cleanReminders(Player p, ArrayList<Reminder> rs) {
+    	for (Reminder r: rs) {
+    		p.removeReminder(r);
+    		reminders.removeElement(r);
+    	}
+    	
+//    	window.refresh(reminders);
+    	
+    	if (p.size() == 0) {
+    		return true;
+    	}
+    	return false;
+    	
+    }
+    
+    public static void cleanPlayers(ArrayList<Player> ps) {
+    	for (Player p: ps) {
+    		players.remove(p);
+    	}
+    }
+    
     public static void startChecker() {
     	timer.schedule(new CheckerTask(), 0, 10000);
     	timerActive = true;
@@ -108,4 +136,12 @@ public class App
 //    public static void stopChecker() {
 //    	timer.cancel();
 //    }
+    
+    private static void reminderSetup() {
+    	for (Player p: players) {
+    		for (Reminder r: p.getReminders()) {
+    			reminders.addElement(r);
+    		}
+    	}
+    }
 }

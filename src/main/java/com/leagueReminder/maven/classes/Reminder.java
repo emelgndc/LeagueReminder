@@ -10,6 +10,7 @@ public class Reminder implements Serializable {
 	private String summonerName;
 	private String reminderText;
 	private int numGames;
+	private Player player;
 	
 	public Reminder(String summonerName, String reminderText, int numGames) {
 		this.summonerName = summonerName;
@@ -23,6 +24,14 @@ public class Reminder implements Serializable {
 	
 	public int getNumGames() {
 		return numGames;
+	}
+	
+	public void setPlayer(Player p) {
+		this.player = p;
+	}
+	
+	public Player getPlayer() {
+		return player;
 	}
 	
 	public void decrement() {

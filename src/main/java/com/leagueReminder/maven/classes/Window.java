@@ -1,123 +1,65 @@
 package com.leagueReminder.maven.classes;
-import java.awt.*;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-
-public class Window {//change this into a subclass of Window? so the other window (editing/removing reminders) can inherit 
-	private String summonerName;
-	private String reminderText;
-	private int numGames;
-	private JFrame frame;	
-	private JTextField stext;
-	private JTextField rtext;
-	private JTextField ntext;	
-	//private JFrame remindersWindow;
+public class Window {
+	private JFrame frame;
+	private AddReminderWindow add;
+	private JList list;
 	
 	public Window() {
-		//Creating the frame
 		frame = new JFrame("League Reminder App");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(450,200);
+		frame.setSize(450,130);
 		frame.setResizable(false);
-
-	    //Menu bar
-	    JMenuBar mb = new JMenuBar();
-	    JMenu file = new JMenu("File");
-	    JMenuItem rem = new JMenuItem("View/Remove Reminders");
-	    JMenuItem exit = new JMenuItem("Exit");
-	    file.add(rem);
-	    file.add(exit);
-	    mb.add(file);
-	    
-//	    rem.addActionListener(new ActionListener() {
-//	    	@Override
-//	    	public void actionPerformed(ActionEvent e) {
-//	    	    DefaultListModel<Reminder> lm = new DefaultListModel<Reminder>();
-//	    	    
-//	    	    for (Player p: App.players) {
-//	    	    	for (Reminder r: p.getReminders()) {
-//	    	    		lm.addElement(r);
-//	    	    	}
-//	    	    }
-//	    	    
-//	    	    JList<Reminder> list = new JList<Reminder>(lm);
-//	    	    RemindersWindow r = new RemindersWindow("View/Remove Reminders", list);
-//	    	    r.show();
-//	    	}
-//	    });
-	    
-	    exit.addActionListener(new ActionListener() {
+		
+		list = new JList(App.reminders);
+		JScrollPane listScroller = new JScrollPane(list);
+		listScroller.setPreferredSize(new Dimension(250, 80));
+		
+		JPanel buttons = new JPanel();
+		JButton addButton = new JButton("Add");
+		JButton removeButton = new JButton("Remove");
+	    addButton.addActionListener(new ActionListener() {
 	    	@Override
 	    	public void actionPerformed(ActionEvent e) {
-	    		System.exit(0);
-	    	}
-	    });
-	    
-		//TextFields
-	    stext = new JTextField(15);
-		rtext = new JTextField(25);
-		ntext = new JTextField(2);
-		
-		//Labels
-		JLabel slabel = new JLabel("Summoner name:");
-		JLabel rlabel = new JLabel("Reminder text:");
-		JLabel nlabel1 = new JLabel("Repeat for");
-		JLabel nlabel2 = new JLabel("games (0 for unlimited)");
-		
-	    //Panels
-	    JPanel panel = new JPanel();
-	    JPanel summonerNamePanel = new JPanel();
-	    JPanel reminderPanel = new JPanel();
-	    JPanel numGamesPanel = new JPanel();
-	    
-	    summonerNamePanel.add(slabel);
-	    summonerNamePanel.add(stext);
-	    reminderPanel.add(rlabel);
-	    reminderPanel.add(rtext);
-	    numGamesPanel.add(nlabel1);
-	    numGamesPanel.add(ntext);
-	    numGamesPanel.add(nlabel2);
-	    
-		//Button
-	    JButton button = new JButton("Set");
-	    button.addActionListener(new ActionListener() {
-	    	@Override
-	    	public void actionPerformed(ActionEvent e) { //when 'set' is pressed
-	    		try {
-	    			numGames = Integer.parseInt(ntext.getText());
-		    		summonerName = stext.getText();
-		    		reminderText = rtext.getText();
-		    		System.out.println(numGames);
-		    		System.out.println(summonerName);
-		    		System.out.println(reminderText);		// execute setreminder
-		    		App.setReminder(summonerName, reminderText, numGames);
-	    		} catch (NumberFormatException x) {
-	    			// popup window notifying user of invalid input
-	    			JOptionPane.showMessageDialog(frame,
-	    				    "needs to be a number",
-	    				    "Invalid input",
-	    				    JOptionPane.WARNING_MESSAGE);
-	    		}
+	    		JDialog dialog = new JDialog(frame, "Add Reminder", true);
+	    		add = new AddReminderWindow(dialog);
 	    	}
 	    });
 	    
 	    
-	    //Adding components to center panel
-	    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-	    panel.add(summonerNamePanel);
-	    panel.add(reminderPanel);
-	    panel.add(numGamesPanel);
+	    addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    removeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    buttons.add(addButton);
+	    buttons.add(removeButton);
+	    //buttons.setLayout(new BoxLayout(buttons, BoxLayout.PAGE_AXIS));
+	    buttons.setLayout(new GridLayout(2,0));
 	    
-	    //Adding components to frame
-	    frame.getContentPane().add(BorderLayout.PAGE_START, mb);
-	    frame.getContentPane().add(BorderLayout.CENTER, panel);
-	    frame.getContentPane().add(BorderLayout.PAGE_END, button);
-	    frame.setVisible(true);
+	    
+	    frame.setLayout(new FlowLayout());
+		frame.getContentPane().add(listScroller);
+		frame.getContentPane().add(buttons); // instead of just 1 button, create horizontal panel which has add/remove/exit buttons. remove should be greyed out unless item selected
+		frame.setVisible(true);
 	}
-
 	
+//	public void refresh(DefaultListModel<Reminder> rs) {
+//		reminders = rs;
+//	}
 }

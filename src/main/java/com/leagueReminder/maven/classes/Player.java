@@ -19,11 +19,17 @@ public class Player implements Serializable {
 	
 	public void addReminder(Reminder r) {
 		reminders.add(r);
+		r.setPlayer(this);
 	}
 	
 	public void removeReminder(Reminder r) {
 		reminders.remove(r);
+		r.setPlayer(null);
 		System.out.println("reminder removed. remaining: " + reminders);
+	}
+	
+	public int size() {
+		return reminders.size();
 	}
 	
 	public ArrayList<Reminder> getReminders() {

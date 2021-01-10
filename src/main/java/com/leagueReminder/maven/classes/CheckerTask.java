@@ -25,6 +25,7 @@ public class CheckerTask extends TimerTask {
 		removeP = new ArrayList<Player>();
 		
 		for (Player p: App.players) {	//loop through all players with active reminders
+
 			removeR = new ArrayList<Reminder>();
 			System.out.print(p.getName() + " ");
 			
@@ -74,20 +75,13 @@ public class CheckerTask extends TimerTask {
 			}
 			
 			s = null;
-			for (Reminder rem: removeR) {
-				p.removeReminder(rem);	//remove reminders that have no games left
-				System.out.println(App.players);
-			}
 			
-			if (p.getReminders().size() == 0) {
-				removeP.add(p);		//add to removal list
-			}
+			boolean empty = App.cleanReminders(p, removeR);
+			if (empty) removeP.add(p);
+			
 		}
 		
-		for (Player p: removeP) {
-			App.players.remove(p);	//remove players that have no reminders left
-			
-		}
+		App.cleanPlayers(removeP);
 		App.serializeData();	//save changes onto disk
 	}
 }
