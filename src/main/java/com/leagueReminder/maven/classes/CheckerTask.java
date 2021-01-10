@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TimerTask;
 
+import javax.swing.JOptionPane;
+
 import org.joda.time.DateTime;
 
 import com.merakianalytics.orianna.*;
@@ -17,32 +19,42 @@ public class CheckerTask extends TimerTask {
 	private Summoner s;
 	private CurrentMatch cm;
 	private Reminder r;
-	private DateTime creationTime;
 	private DateTime cmct;
+	private ArrayList<Player> playersCopy;
 	
 	@Override
 	public void run() {
 		removeP = new ArrayList<Player>();
-		
-		for (Player p: App.players) {	//loop through all players with active reminders
+		playersCopy = new ArrayList<Player>(App.players);
+		for (Player p: playersCopy) {	//loop through all players with active reminders
 
 			removeR = new ArrayList<Reminder>();
-			System.out.print(p.getName() + " ");
+			System.out.println(p.getName());
 			
 			Orianna.loadConfiguration("config.json");
-			Orianna.setRiotAPIKey("API KEY HERE");
+			Orianna.setRiotAPIKey("RGAPI-6a5e8e8b-1516-471a-94a0-bb76365696d2");
 			
 			s = Orianna.summonerNamed(p.getName()).withRegion(Region.OCEANIA).get();	//fetch summoner
-			cm = s.getCurrentMatch();
-			cmct = cm.getCreationTime();
-			//System.out.println(cm);
 			
+    		try {
+    			cm = s.getCurrentMatch();
+    			cmct = cm.getCreationTime();
+    		} catch (NullPointerException x) {	// summoner doesnt exist
+    			System.out.println("summoner " + p.getName() + " does not exist");
+    			
+    			s = null;
+    			boolean empty = App.cleanReminders(p, removeR);
+    			if (empty) removeP.add(p);
+    			
+    			continue;
+    		}
+
 			//CHECKING IF PLAYER IS NO LONGER INGAME 
 			if (p.getIngame() == true) {	// if player was but is no longer ingame, activate reminders
-				System.out.println(creationTime + " " + cmct + "INGAME");
+				System.out.println(cmct + " INGAME");
 				if (cm.exists() == false) {	// (no longer ingame)
 					System.out.println("finished game - set false and activate reminder");	
-					System.out.println(creationTime + " " + cm.getCreationTime() + "FINISHED");
+					System.out.println(cmct + " FINISHED");
 					p.setIngame(false);
 					for (Iterator<Reminder> it = p.getReminders().iterator(); it.hasNext();) {
 						r = it.next();
@@ -62,13 +74,11 @@ public class CheckerTask extends TimerTask {
 			//CHECKING IF PLAYER HAS STARTED A GAME
 			} else {
 				if (cm.exists() == true && cmct.isEqual(0) == false) {	//api sometimes shows a match creation time as 0
-					if (cm.getCreationTime().isEqual(creationTime)) {
+					if (cm.getCreationTime().isEqual(p.getLCT())) {
 						System.out.println("bugged trigger, ignore");	//api sometimes shows a player as ingame after game has ended
 					} else {
-						System.out.println(creationTime);
-						creationTime = cm.getCreationTime();	//save the creationTime of the match to avoid bugged reminder triggers
-						System.out.println(creationTime);
-						p.setIngame(true);
+						p.setLCT(cmct);									//save the creationTime of the match to avoid bugged reminder triggers
+						p.setIngame(true);							
 						System.out.println("ingame - set true");
 					}
 				}

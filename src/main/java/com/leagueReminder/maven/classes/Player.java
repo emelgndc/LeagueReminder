@@ -3,6 +3,8 @@ package com.leagueReminder.maven.classes;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
 public class Player implements Serializable {
 	/**
 	 * 
@@ -11,6 +13,7 @@ public class Player implements Serializable {
 	private String summonerName;
 	private ArrayList<Reminder> reminders = new ArrayList<Reminder>();
 	private boolean ingame;
+	private DateTime lastCreationTime;
 	
 	public Player(String summonerName, int gamesLeft) {
 		this.summonerName = summonerName;
@@ -25,7 +28,6 @@ public class Player implements Serializable {
 	public void removeReminder(Reminder r) {
 		reminders.remove(r);
 		r.setPlayer(null);
-		System.out.println("reminder removed. remaining: " + reminders);
 	}
 	
 	public int size() {
@@ -42,6 +44,14 @@ public class Player implements Serializable {
 	
 	public void setIngame(boolean s) {
 		this.ingame = s;
+	}
+	
+	public void setLCT(DateTime ct) {
+		this.lastCreationTime = ct;		
+	}
+	
+	public DateTime getLCT() {
+		return this.lastCreationTime;
 	}
 	
 	public boolean getIngame() {

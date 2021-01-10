@@ -39,6 +39,7 @@ public class Reminder implements Serializable {
 	}
 	
 	public String toString() {
-		return "Reminder [" + summonerName + ", " + reminderText + ", " + numGames + "]";
+		if (numGames == 0) return summonerName + " | unlimited | '" + reminderText + "'";
+		return summonerName + " | " + numGames + " games" + " | '" + reminderText + "'";
 	}
 }

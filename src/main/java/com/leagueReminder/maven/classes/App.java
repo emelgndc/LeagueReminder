@@ -2,6 +2,7 @@ package com.leagueReminder.maven.classes;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
 import javax.swing.DefaultListModel;
@@ -92,7 +93,7 @@ public class App
     	}
     	
     	reminders.addElement(r);
-//    	window.refresh(reminders);
+
         serializeData(); 
         
         if (timerActive == false) {
@@ -107,13 +108,16 @@ public class App
     	d.setVisible(true);
     }
     
+    public static void deleteReminder(Reminder r) {
+    	reminders.removeElement(r);
+    	r.getPlayer().removeReminder(r);
+    	System.out.println("reminder " + r + " removed.");
+    }
+    
     public static boolean cleanReminders(Player p, ArrayList<Reminder> rs) {
     	for (Reminder r: rs) {
-    		p.removeReminder(r);
-    		reminders.removeElement(r);
+    		deleteReminder(r);
     	}
-    	
-//    	window.refresh(reminders);
     	
     	if (p.size() == 0) {
     		return true;
@@ -125,6 +129,7 @@ public class App
     public static void cleanPlayers(ArrayList<Player> ps) {
     	for (Player p: ps) {
     		players.remove(p);
+    		System.out.println("player " + p.getName() + " removed.");
     	}
     }
     
